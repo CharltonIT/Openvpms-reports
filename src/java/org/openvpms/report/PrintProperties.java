@@ -21,7 +21,7 @@ package org.openvpms.report;
 import javax.print.attribute.standard.MediaSizeName;
 import javax.print.attribute.standard.MediaTray;
 import javax.print.attribute.standard.OrientationRequested;
-
+import javax.print.attribute.standard.Sides;
 
 /**
  * Print properties.
@@ -50,6 +50,11 @@ public class PrintProperties {
      * The media tray.
      */
     private MediaTray mediaTray;
+    /**
+     * The duplex setting
+     */
+     
+    private Sides sides;
 
     /**
      * The no. of copies.
@@ -146,5 +151,19 @@ public class PrintProperties {
     public int getCopies() {
         return copies >= 1 ? copies : 1;
     }
-
+    /**
+     * Set the Duplexing
+     * @param sides 
+     */
+    public void setSides(Sides sides) {
+        this.sides = sides;
+    }
+    
+    /**
+     * @return the Duplexing setting
+     */
+    public Sides getSides() {
+        return sides;
+    }
+    
 }
