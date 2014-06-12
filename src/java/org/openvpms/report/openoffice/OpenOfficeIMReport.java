@@ -296,7 +296,7 @@ public class OpenOfficeIMReport<T> implements IMReport<T> {
             PrintService service = OpenOfficeHelper.getPrintService();
             connection = OpenOfficeHelper.getConnectionPool().getConnection();
             doc = create(objects, parameters, connection);
-            service.print(doc, properties.getPrinterName(), properties.getCopies(), true);
+            service.print(doc, properties, true);
         } catch (OpenOfficeException exception) {
             throw new ReportException(exception, FailedToPrintReport, exception.getMessage());
         } finally {
