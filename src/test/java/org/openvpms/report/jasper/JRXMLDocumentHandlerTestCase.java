@@ -88,7 +88,7 @@ public class JRXMLDocumentHandlerTestCase extends ArchetypeServiceTest {
         } catch (JRXMLDocumentException expected) {
             assertEquals(JRXMLDocumentException.ErrorCode.ReadError, expected.getErrorCode());
             assertEquals("Failed to read /reports/invalid.jrxml. Please ensure it is saved to be compatible with "
-                         + "JasperReports 3.7.6", expected.getMessage());
+                         + "JasperReports 5.5.0", expected.getMessage());
         }
     }
 }

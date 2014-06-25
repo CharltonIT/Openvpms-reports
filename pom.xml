@@ -269,6 +269,11 @@
             <artifactId>xml-apis</artifactId>
             <version>${xmlapis.version}</version>
         </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <properties>

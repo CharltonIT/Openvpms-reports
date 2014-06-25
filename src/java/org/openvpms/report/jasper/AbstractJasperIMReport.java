@@ -584,7 +584,7 @@ public abstract class AbstractJasperIMReport<T> implements JasperIMReport<T> {
     private void exportToText(JasperPrint report, OutputStream stream, Map<String, Object> parameters)
             throws JRException {
         JRTextExporter exporter = new JRTextExporter();
-        exporter.getParameters().putAll(parameters);
+        // @TODO look at params and importing exporter.getParameters().putAll(parameters);
         exporter.setParameter(JRExporterParameter.CHARACTER_ENCODING, "UTF-8");
         exporter.setParameter(JRExporterParameter.JASPER_PRINT, report);
         export(exporter, report, stream);
