@@ -62,6 +62,7 @@ import javax.print.attribute.standard.MediaSizeName;
 import javax.print.attribute.standard.MediaTray;
 import javax.print.attribute.standard.OrientationRequested;
 import javax.print.attribute.standard.PrinterName;
+import javax.print.attribute.standard.Sides;
 import java.io.ByteArrayInputStream;
 import java.io.OutputStream;
 import java.util.Collections;
@@ -627,6 +628,7 @@ public abstract class AbstractJasperIMReport<T> implements JasperIMReport<T> {
         MediaSizeName mediaSize = properties.getMediaSize();
         OrientationRequested orientation = properties.getOrientation();
         MediaTray tray = properties.getMediaTray();
+        Sides printsides = properties.getSides();
         if (mediaSize != null) {
             if (log.isDebugEnabled()) {
                 log.debug("MediaSizeName: " + mediaSize);
@@ -644,6 +646,12 @@ public abstract class AbstractJasperIMReport<T> implements JasperIMReport<T> {
                 log.debug("MediaTray: " + tray);
             }
             aset.add(tray);
+        }
+        if (printsides !=null) {
+            if (log.isDebugEnabled()) {
+                log.debug("Sides: " + printsides);
+            }
+            aset.add(printsides);
         }
         exporter.setParameter(JRPrintServiceExporterParameter.PRINT_REQUEST_ATTRIBUTE_SET, aset);
 

@@ -11,27 +11,27 @@
  *  for the specific language governing rights and limitations under the
  *  License.
  *
- *  Copyright 2006 (C) OpenVPMS Ltd. All Rights Reserved.
+ *  Copyright 2014 (C) OpenVPMS Ltd. All Rights Reserved.
  *
  *  $Id$
  */
-
 package org.openvpms.report.openoffice;
 
 import com.sun.star.beans.PropertyValue;
 import com.sun.star.lang.IllegalArgumentException;
 import com.sun.star.uno.UnoRuntime;
 import com.sun.star.view.XPrintable;
+import javax.print.attribute.standard.Sides;
 import org.openvpms.archetype.rules.doc.DocumentHandlers;
 import org.openvpms.component.business.domain.im.document.Document;
+import org.openvpms.report.PrintProperties;
 import static org.openvpms.report.openoffice.OpenOfficeException.ErrorCode.FailedToPrint;
-
+import com.sun.star.view.DuplexMode;
 
 /**
  * OpenOffice print service.
  *
- * @author <a href="mailto:support@openvpms.org">OpenVPMS Team</a>
- * @version $LastChangedDate: 2006-05-02 05:16:31Z $
+ * @author Benjamin Charlton
  */
 public class PrintService {
 
@@ -45,11 +45,10 @@ public class PrintService {
      */
     private final DocumentHandlers handlers;
 
-
     /**
      * Creates a new <code>PrintService</code>.
      *
-     * @param pool     the connection pool
+     * @param pool the connection pool
      * @param handlers the document handlers
      */
     public PrintService(OOConnectionPool pool, DocumentHandlers handlers) {
@@ -61,7 +60,7 @@ public class PrintService {
      * Prints a document.
      *
      * @param document the document to print
-     * @param printer  the printer name.
+     * @param printer the printer name.
      * @throws OpenOfficeException for any error
      */
     public void print(Document document, String printer) {
@@ -72,7 +71,7 @@ public class PrintService {
      * Prints a document.
      *
      * @param document the document to print
-     * @param printer  the printer name
+     * @param printer the printer name
      * @param copies the number of copies to print
      * @throws OpenOfficeException for any error
      */
@@ -92,8 +91,8 @@ public class PrintService {
      * Prints a document.
      *
      * @param document the document to print
-     * @param printer  the printer name
-     * @param close    if <tt>true</tt>, close the document when printing completes
+     * @param printer the printer name
+     * @param close if <tt>true</tt>, close the document when printing completes
      * @throws OpenOfficeException for any error
      */
     public void print(OpenOfficeDocument document, String printer, boolean close) {
@@ -104,56 +103,56 @@ public class PrintService {
      * Prints a document.
      *
      * @param document the document to print
-     * @param printer  the printer name
-     * @param copies   the number of copies of the document to print
-     * @param close    if <tt>true</tt>, close the document when printing completes
+     * @param printer the printer name
+     * @param copies the number of copies of the document to print
+     * @param close if <tt>true</tt>, close the document when printing completes
      * @throws OpenOfficeException for any error
      */
-    public void print(final OpenOfficeDocument document, String printer, int copies, boolean close) {
+    public void print(OpenOfficeDocument document, String printer, int copies, boolean close) {
         XPrintable printable = (XPrintable) UnoRuntime.queryInterface(
                 XPrintable.class, document.getComponent());
 
         PropertyValue[] printerDesc = {newProperty("Name", printer)};
         PropertyValue[] printOpts = {newProperty("Wait", true), newProperty("CopyCount", copies)};
-
-/*
-        todo - replaced asynchronous notification of print completion with
-        synchonrous printing due to OpenOffice 2.1 crashes.
-        if (close) {
-            XPrintJobBroadcaster broadcaster = (XPrintJobBroadcaster)
-                    UnoRuntime.queryInterface(XPrintJobBroadcaster.class,
-                                              printable);
-            broadcaster.addPrintJobListener(new XPrintJobListener() {
-                public void printJobEvent(PrintJobEvent event) {
-                    PrintableState state = event.State;
-                    if (!state.equals(PrintableState.JOB_STARTED)
-                            && !state.equals(PrintableState.JOB_SPOOLED)) {
-                        document.close();
-                    }
-                }
-
-                public void disposing(EventObject eventObject) {
-                }
-            });
-        }
-*/
-
         try {
             printable.setPrinter(printerDesc);
             printable.print(printOpts);
         } catch (IllegalArgumentException exception) {
             throw new OpenOfficeException(FailedToPrint, exception.getMessage(),
-                                          exception);
+                    exception);
         }
         if (close) {
             document.close();
         }
     }
 
+    public void print(final OpenOfficeDocument document, PrintProperties properties, boolean close) {
+        XPrintable printable = (XPrintable) UnoRuntime.queryInterface(
+                XPrintable.class, document.getComponent());
+        int copies = properties.getCopies();
+        String printer = properties.getPrinterName();
+        Sides sides = properties.getSides();
+        Short printSides = setDuplexing(sides);
+        PropertyValue[] printerDesc = {newProperty("Name", printer)};
+        PropertyValue[] printOpts = {newProperty("Wait", true), newProperty("CopyCount", copies),
+            newProperty("DuplexMode", printSides)};
+        try {
+            printable.setPrinter(printerDesc);
+            printable.print(printOpts);
+        } catch (IllegalArgumentException exception) {
+            throw new OpenOfficeException(FailedToPrint, exception.getMessage(),
+                    exception);
+        }
+        if (close) {
+            document.close();
+        }
+
+    }
+
     /**
      * Helper to create a new <code>PropertyValue</code>.
      *
-     * @param name  the property name
+     * @param name the property name
      * @param value the property value
      * @return a new <code>PropertyValue</code>
      */
@@ -164,4 +163,16 @@ public class PrintService {
         return property;
     }
 
+    private Short setDuplexing(Sides sides) {
+        if (sides != null) {
+            if (sides == Sides.ONE_SIDED) {
+                return DuplexMode.OFF;
+            } else if (sides == Sides.DUPLEX || sides == Sides.TWO_SIDED_LONG_EDGE) {
+                return DuplexMode.LONGEDGE;
+            } else if (sides == Sides.TUMBLE || sides == Sides.TWO_SIDED_SHORT_EDGE) {
+                return DuplexMode.SHORTEDGE;
+            }
+        }
+        return DuplexMode.UNKNOWN;
+    }
 }
