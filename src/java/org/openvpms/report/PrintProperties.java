@@ -12,8 +12,6 @@
  *  License.
  *
  *  Copyright 2006 (C) OpenVPMS Ltd. All Rights Reserved.
- *
- *  $Id$
  */
 
 package org.openvpms.report;
@@ -26,8 +24,7 @@ import javax.print.attribute.standard.Sides;
 /**
  * Print properties.
  *
- * @author <a href="mailto:support@openvpms.org">OpenVPMS Team</a>
- * @version $LastChangedDate: 2006-05-02 05:16:31Z $
+ * @author Tim Anderson
  */
 public class PrintProperties {
 
@@ -50,10 +47,10 @@ public class PrintProperties {
      * The media tray.
      */
     private MediaTray mediaTray;
+
     /**
-     * The duplex setting
+     * The page sides to print on.
      */
-     
     private Sides sides;
 
     /**
@@ -151,19 +148,24 @@ public class PrintProperties {
     public int getCopies() {
         return copies >= 1 ? copies : 1;
     }
+
     /**
-     * Set the Duplexing
-     * @param sides 
+     * Sets the paper sides to print on.
+     *
+     * @param sides the sides. May be {@code null}
      */
     public void setSides(Sides sides) {
         this.sides = sides;
     }
-    
+
     /**
-     * @return the Duplexing setting
+     * Returns the paper sides to print on.
+     *
+     * @return the sides. May be {@code null}
      */
     public Sides getSides() {
         return sides;
     }
-    
+
 }
+

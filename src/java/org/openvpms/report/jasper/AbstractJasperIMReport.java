@@ -584,7 +584,7 @@ public abstract class AbstractJasperIMReport<T> implements JasperIMReport<T> {
     private void exportToText(JasperPrint report, OutputStream stream, Map<String, Object> parameters)
             throws JRException {
         JRTextExporter exporter = new JRTextExporter();
-        // @TODO look at params and importing exporter.getParameters().putAll(parameters);
+        exporter.getParameters().putAll(parameters);
         exporter.setParameter(JRExporterParameter.CHARACTER_ENCODING, "UTF-8");
         exporter.setParameter(JRExporterParameter.JASPER_PRINT, report);
         export(exporter, report, stream);
@@ -628,7 +628,7 @@ public abstract class AbstractJasperIMReport<T> implements JasperIMReport<T> {
         MediaSizeName mediaSize = properties.getMediaSize();
         OrientationRequested orientation = properties.getOrientation();
         MediaTray tray = properties.getMediaTray();
-        Sides printsides = properties.getSides();
+        Sides sides = properties.getSides();
         if (mediaSize != null) {
             if (log.isDebugEnabled()) {
                 log.debug("MediaSizeName: " + mediaSize);
@@ -647,11 +647,11 @@ public abstract class AbstractJasperIMReport<T> implements JasperIMReport<T> {
             }
             aset.add(tray);
         }
-        if (printsides !=null) {
+        if (sides != null) {
             if (log.isDebugEnabled()) {
-                log.debug("Sides: " + printsides);
+                log.debug("Sides: " + sides);
             }
-            aset.add(printsides);
+            aset.add(sides);
         }
         exporter.setParameter(JRPrintServiceExporterParameter.PRINT_REQUEST_ATTRIBUTE_SET, aset);
 
