@@ -59,28 +59,16 @@ public class PrintService {
     /**
      * Prints a document.
      *
-     * @param document the document to print
-     * @param printer the printer name.
+     * @param document   the document to print
+     * @param properties the print properties
      * @throws OpenOfficeException for any error
      */
-    public void print(Document document, String printer) {
-        print(document, printer, 1);
-    }
-
-    /**
-     * Prints a document.
-     *
-     * @param document the document to print
-     * @param printer the printer name
-     * @param copies the number of copies to print
-     * @throws OpenOfficeException for any error
-     */
-    public void print(Document document, String printer, int copies) {
+    public void print(Document document, PrintProperties properties) {
         OOConnection connection = null;
         try {
             connection = pool.getConnection();
             OpenOfficeDocument doc = new OpenOfficeDocument(document, connection, handlers);
-            print(doc, printer, copies, true);
+            print(doc, properties, true);
         } finally {
             OpenOfficeHelper.close(connection);
 
@@ -91,48 +79,16 @@ public class PrintService {
      * Prints a document.
      *
      * @param document the document to print
-     * @param printer the printer name
+     * @param properties
      * @param close if <tt>true</tt>, close the document when printing completes
      * @throws OpenOfficeException for any error
      */
-    public void print(OpenOfficeDocument document, String printer, boolean close) {
-        print(document, printer, 1, close);
-    }
-
-    /**
-     * Prints a document.
-     *
-     * @param document the document to print
-     * @param printer the printer name
-     * @param copies the number of copies of the document to print
-     * @param close if <tt>true</tt>, close the document when printing completes
-     * @throws OpenOfficeException for any error
-     */
-    public void print(OpenOfficeDocument document, String printer, int copies, boolean close) {
-        XPrintable printable = (XPrintable) UnoRuntime.queryInterface(
-                XPrintable.class, document.getComponent());
-
-        PropertyValue[] printerDesc = {newProperty("Name", printer)};
-        PropertyValue[] printOpts = {newProperty("Wait", true), newProperty("CopyCount", copies)};
-        try {
-            printable.setPrinter(printerDesc);
-            printable.print(printOpts);
-        } catch (IllegalArgumentException exception) {
-            throw new OpenOfficeException(FailedToPrint, exception.getMessage(),
-                    exception);
-        }
-        if (close) {
-            document.close();
-        }
-    }
-
-    public void print(final OpenOfficeDocument document, PrintProperties properties, boolean close) {
-        XPrintable printable = (XPrintable) UnoRuntime.queryInterface(
-                XPrintable.class, document.getComponent());
+    public void print(OpenOfficeDocument document, PrintProperties properties, boolean close) {
+        XPrintable printable = UnoRuntime.queryInterface(XPrintable.class, document.getComponent());
         int copies = properties.getCopies();
         String printer = properties.getPrinterName();
         Sides sides = properties.getSides();
-        Short printSides = setDuplexing(sides);
+        Short printSides = getDuplexMode(sides);
         PropertyValue[] printerDesc = {newProperty("Name", printer)};
         PropertyValue[] printOpts = {newProperty("Wait", true), newProperty("CopyCount", copies),
             newProperty("DuplexMode", printSides)};
@@ -140,30 +96,34 @@ public class PrintService {
             printable.setPrinter(printerDesc);
             printable.print(printOpts);
         } catch (IllegalArgumentException exception) {
-            throw new OpenOfficeException(FailedToPrint, exception.getMessage(),
-                    exception);
+            throw new OpenOfficeException(FailedToPrint, exception.getMessage(), exception);
         }
         if (close) {
             document.close();
         }
-
     }
 
     /**
-     * Helper to create a new <code>PropertyValue</code>.
+     * Helper to create a new {@code PropertyValue}.
      *
-     * @param name the property name
+     * @param name  the property name
      * @param value the property value
-     * @return a new <code>PropertyValue</code>
+     * @return a new {@code PropertyValue}
      */
-    private static PropertyValue newProperty(String name, Object value) {
+    private PropertyValue newProperty(String name, Object value) {
         PropertyValue property = new PropertyValue();
         property.Name = name;
         property.Value = value;
         return property;
     }
 
-    private Short setDuplexing(Sides sides) {
+    /**
+     * Returns the duplex mode.
+     *
+     * @param sides the sides to print on. May be {@code null}
+     * @return the sides to print on
+     */
+    private Short getDuplexMode(Sides sides) {
         if (sides != null) {
             if (sides == Sides.ONE_SIDED) {
                 return DuplexMode.OFF;
