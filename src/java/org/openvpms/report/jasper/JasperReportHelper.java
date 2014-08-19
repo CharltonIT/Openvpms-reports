@@ -21,6 +21,7 @@ package org.openvpms.report.jasper;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
+import net.sf.jasperreports.engine.SimpleReportContext;
 import org.apache.commons.io.IOUtils;
 import org.openvpms.archetype.rules.doc.DocumentException;
 import org.openvpms.archetype.rules.doc.DocumentHandler;
@@ -30,6 +31,7 @@ import org.openvpms.component.business.domain.im.document.Document;
 import org.openvpms.component.business.service.archetype.IArchetypeService;
 
 import java.io.InputStream;
+import java.util.Map;
 
 
 /**
@@ -82,5 +84,21 @@ public class JasperReportHelper {
         } finally {
             IOUtils.closeQuietly(stream);
         }
+    }
+
+    /**
+     * Creates a new {@link SimpleReportContext} from a Java Map of parameters. parameters can be null
+     * @param parameters a Map<String,Object> containing parameters
+     * @return {@link SimpleReportContext.class}
+     */
+    public static SimpleReportContext createReportContext(Map<String, Object> parameters){
+        SimpleReportContext result = new SimpleReportContext();
+        if(parameters.size()>0){
+            for (Map.Entry<String, Object> entry : parameters.entrySet()){
+                result.setParameterValue(entry.getKey(), entry.getValue());
+            }
+        }
+        return result;
+        
     }
 }
