@@ -11,9 +11,9 @@
  *  for the specific language governing rights and limitations under the
  *  License.
  *
- *  Copyright 2006 (C) OpenVPMS Ltd. All Rights Reserved.
+ *  Copyright 2014 (C) OpenVPMS Ltd. All Rights Reserved.
  *
- *  $Id$
+ *  
  */
 
 package org.openvpms.report;
@@ -82,6 +82,9 @@ public class ReportFactory {
             report = new OpenOfficeIMReport<IMObject>(template, handlers);
         } else if (name.endsWith(DocFormats.DOC_EXT)) {
             report = new MsWordIMReport<IMObject>(template, handlers);
+        } else if (name.endsWith(DocFormats.DOCX_EXT)) {
+            throw new ReportException(UnsupportedTemplate, name);
+            //todo work out Userfield retrieval to allow support for docx templates.
         } else {
             throw new ReportException(UnsupportedTemplate, name);
         }

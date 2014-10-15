@@ -11,7 +11,7 @@
  * for the specific language governing rights and limitations under the
  * License.
  *
- * Copyright 2013 (C) OpenVPMS Ltd. All Rights Reserved.
+ * Copyright 2014 (C) OpenVPMS Ltd. All Rights Reserved.
  */
 
 package org.openvpms.report;
@@ -43,12 +43,23 @@ public class DocFormats {
      * Excel mime-type.
      */
     public static final String XLS_TYPE = "application/excel";
+    
+    /**
+     * Excel post 2007 mime-type.
+     */
+    public static final String XLSX_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
     /**
      * Excel file extension.
      */
     public static final String XLS_EXT = "xls";
-
+    
+    /**
+     * Excel Post 2007 file extension.
+     * 
+     */
+    public static final String XLSX_EXT = "xlsx";
+    
     /**
      * OpenDocument Text mime-type.
      */
@@ -60,7 +71,10 @@ public class DocFormats {
      */
     public static final String DOC_TYPE
             = "application/msword";
-
+    /**
+     * MS Word Document mime-type
+     */
+    public static final String DOCX_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
     /**
      * OpenDocument Text file extension.
      */
@@ -80,7 +94,11 @@ public class DocFormats {
      * MS Word Document file extension.
      */
     public static final String DOC_EXT = "doc";
-
+    
+    /**
+     * MS Word Document file extension.
+     */
+    public static final String DOCX_EXT ="docx";
     /**
      * CSV Format mime-type.
      */

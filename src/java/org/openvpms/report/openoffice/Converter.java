@@ -11,9 +11,9 @@
  *  for the specific language governing rights and limitations under the
  *  License.
  *
- *  Copyright 2006 (C) OpenVPMS Ltd. All Rights Reserved.
+ *  Copyright 2014 (C) OpenVPMS Ltd. All Rights Reserved.
  *
- *  $Id$
+ *  
  */
 
 package org.openvpms.report.openoffice;
@@ -48,6 +48,8 @@ public class Converter {
     private static final String[][] MIME_MAP = {{DocFormats.ODT_TYPE,
                                                  DocFormats.PDF_TYPE},
                                                 {DocFormats.DOC_TYPE,
+                                                 DocFormats.PDF_TYPE},
+                                                {DocFormats.DOCX_TYPE,
                                                  DocFormats.PDF_TYPE}};
 
     /**
@@ -56,6 +58,8 @@ public class Converter {
     private static final String[][] EXT_MAP = {{DocFormats.ODT_EXT,
                                                 DocFormats.PDF_TYPE},
                                                {DocFormats.DOC_EXT,
+                                                DocFormats.PDF_TYPE},
+                                               {DocFormats.DOCX_EXT,
                                                 DocFormats.PDF_TYPE}};
 
 
