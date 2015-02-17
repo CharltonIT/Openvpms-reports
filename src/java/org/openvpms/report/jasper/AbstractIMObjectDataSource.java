@@ -18,6 +18,7 @@ package org.openvpms.report.jasper;
 
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRRewindableDataSource;
 import org.apache.commons.jxpath.Functions;
 import org.openvpms.archetype.rules.doc.DocumentHandlers;
 import org.openvpms.component.business.domain.im.common.IMObject;
@@ -30,7 +31,7 @@ import org.openvpms.component.business.service.lookup.ILookupService;
  *
  * @author Tim Anderson
  */
-public abstract class AbstractIMObjectDataSource implements JRDataSource {
+public abstract class AbstractIMObjectDataSource implements JRRewindableDataSource {
 
     /**
      * The archetype service.

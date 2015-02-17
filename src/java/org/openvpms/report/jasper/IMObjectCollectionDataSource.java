@@ -48,7 +48,9 @@ public class IMObjectCollectionDataSource extends AbstractIMObjectDataSource {
     /**
      * The collection iterator.
      */
-    private final Iterator<IMObject> iter;
+    private final Iterable<IMObject> collection;
+
+    private Iterator<IMObject> iter;
 
     /**
      * Additional fields. May be {@code null}
@@ -86,7 +88,8 @@ public class IMObjectCollectionDataSource extends AbstractIMObjectDataSource {
         for (String sortNode : sortNodes) {
             sort(values, sortNode);
         }
-        iter = values.iterator();
+        collection = values;
+        iter = collection.iterator();
         this.fields = fields;
         displayName = descriptor.getDisplayName();
     }
@@ -101,10 +104,11 @@ public class IMObjectCollectionDataSource extends AbstractIMObjectDataSource {
      * @param handlers  the document handlers
      * @param functions the JXPath extension functions
      */
-    public IMObjectCollectionDataSource(Iterator<IMObject> objects, PropertySet fields, IArchetypeService service,
+    public IMObjectCollectionDataSource(Iterable<IMObject> objects, PropertySet fields, IArchetypeService service,
                                         ILookupService lookups, DocumentHandlers handlers, Functions functions) {
         super(service, lookups, handlers, functions);
-        iter = objects;
+        collection = objects;
+        iter = collection.iterator();
         this.fields = fields;
     }
 
@@ -178,6 +182,11 @@ public class IMObjectCollectionDataSource extends AbstractIMObjectDataSource {
         Transformer transformer = new NodeTransformer(sortNode, getArchetypeService());
         TransformingComparator transComparator = new TransformingComparator(transformer, comparator);
         Collections.sort(objects, transComparator);
+    }
+
+    @Override
+    public void moveFirst() throws JRException {
+        iter = collection.iterator();
     }
 
     private static class NodeTransformer implements Transformer {

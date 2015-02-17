@@ -31,11 +31,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.text.DateFormat;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -73,7 +69,7 @@ public class OpenOfficeIMReportTestCase extends AbstractOpenOfficeDocumentTest {
         act.setParticipant("participation.customer", party);
 
         List<IMObject> objects = Arrays.asList((IMObject) act.getAct());
-        Document result = report.generate(objects.iterator(), null, fields, DocFormats.ODT_TYPE);
+        Document result = report.generate(objects, null, fields, DocFormats.ODT_TYPE);
         Map<String, String> userFields = getUserFields(result);
         String expectedStartTime = DateFormat.getDateInstance(DateFormat.MEDIUM).format(startTime);
         assertEquals(expectedStartTime, userFields.get("startTime"));
@@ -118,7 +114,7 @@ public class OpenOfficeIMReportTestCase extends AbstractOpenOfficeDocumentTest {
         act.setParticipant("participation.customer", party);
 
         List<IMObject> objects = Arrays.asList((IMObject) act.getAct());
-        Document result = report.generate(objects.iterator(), parameters, null, DocFormats.ODT_TYPE);
+        Document result = report.generate(objects, parameters, null, DocFormats.ODT_TYPE);
 
         Map<String, String> inputFields = getInputFields(result);
         assertEquals("the input value", inputFields.get("inputField1"));

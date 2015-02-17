@@ -36,7 +36,6 @@ import org.openvpms.component.system.common.util.PropertySet;
 import org.openvpms.report.ExpressionEvaluator;
 import org.openvpms.report.IMObjectExpressionEvaluator;
 
-import java.util.Iterator;
 import java.util.Map;
 
 
@@ -152,17 +151,14 @@ public class IMObjectDataSource extends AbstractIMObjectDataSource {
     public JRDataSource getExpressionDataSource(String expression) throws JRException {
         JXPathContext context = JXPathHelper.newContext(object, getFunctions());
         Object value = context.getValue(expression);
-        Iterator<IMObject> iterator;
+        Iterable<IMObject> iterable;
         if (value instanceof Iterable) {
-            Iterable<IMObject> iterable = (Iterable<IMObject>) value;
-            iterator = iterable.iterator();
-        } else if (value instanceof Iterator) {
-            iterator = (Iterator<IMObject>) value;
+            iterable = (Iterable<IMObject>) value;
         } else {
             throw new JRException("Unsupported value type=" + ((value != null) ? value.getClass() : null)
                                   + " returned by expression=" + expression);
         }
-        return new IMObjectCollectionDataSource(iterator, fields, getArchetypeService(), getLookupService(),
+        return new IMObjectCollectionDataSource(iterable, fields, getArchetypeService(), getLookupService(),
                                                 getDocumentHandlers(), getFunctions());
     }
 
@@ -186,4 +182,8 @@ public class IMObjectDataSource extends AbstractIMObjectDataSource {
         return value;
     }
 
+    @Override
+    public void moveFirst() throws JRException {
+        throw new JRException("Cannot moveFirst on a Singleton");
+    }
 }

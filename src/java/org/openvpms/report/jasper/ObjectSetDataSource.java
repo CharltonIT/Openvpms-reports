@@ -16,9 +16,9 @@
 
 package org.openvpms.report.jasper;
 
-import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRField;
+import net.sf.jasperreports.engine.JRRewindableDataSource;
 import org.apache.commons.jxpath.Functions;
 import org.openvpms.component.business.service.archetype.IArchetypeService;
 import org.openvpms.component.business.service.lookup.ILookupService;
@@ -34,7 +34,7 @@ import java.util.Iterator;
  *
  * @author Tim Anderson
  */
-public class ObjectSetDataSource implements JRDataSource {
+ class ObjectSetDataSource implements JRRewindableDataSource {
 
     /**
      * The current object.
@@ -44,7 +44,9 @@ public class ObjectSetDataSource implements JRDataSource {
     /**
      * The iterator.
      */
-    private final Iterator<ObjectSet> iterator;
+    private final Iterable<ObjectSet> iterable;
+
+    private Iterator<ObjectSet> iterator;
 
     /**
      * Additional fields. May be {@code null}
@@ -70,15 +72,16 @@ public class ObjectSetDataSource implements JRDataSource {
     /**
      * Constructs a {@link ObjectSetDataSource}.
      *
-     * @param iterator  the iterator
+     * @param iterable  the iterator
      * @param fields    additional report fields. These override any in the report. May be {@code null}
      * @param service   the archetype service
      * @param lookups   the lookup service
      * @param functions the JXPath extension functions
      */
-    public ObjectSetDataSource(Iterator<ObjectSet> iterator, PropertySet fields, IArchetypeService service,
+    public ObjectSetDataSource(Iterable<ObjectSet> iterable, PropertySet fields, IArchetypeService service,
                                ILookupService lookups, Functions functions) {
-        this.iterator = iterator;
+        this.iterable = iterable;
+        this.iterator = iterable.iterator();
         this.fields = fields;
         this.service = service;
         this.lookups = lookups;
@@ -110,5 +113,10 @@ public class ObjectSetDataSource implements JRDataSource {
      */
     public Object getFieldValue(JRField field) throws JRException {
         return current.getValue(field.getName());
+    }
+
+    @Override
+    public void moveFirst() throws JRException {
+        iterator = iterable.iterator();
     }
 }

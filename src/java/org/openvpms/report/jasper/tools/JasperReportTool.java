@@ -44,9 +44,7 @@ import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.openvpms.report.ReportException.ErrorCode.FailedToCreateReport;
-import static org.openvpms.report.ReportException.ErrorCode.NoTemplateForArchetype;
-import static org.openvpms.report.ReportException.ErrorCode.UnsupportedTemplate;
+import static org.openvpms.report.ReportException.ErrorCode.*;
 
 
 /**
@@ -85,7 +83,7 @@ public class JasperReportTool extends ReportTool {
         if (report instanceof JasperIMReport) {
             JasperIMReport<IMObject> r = (JasperIMReport<IMObject>) report;
             List<IMObject> list = Arrays.asList(object);
-            JasperViewer viewer = new JasperViewer(r.report(list.iterator()),
+            JasperViewer viewer = new JasperViewer(r.report(list),
                                                    true);
             viewer.setVisible(true);
         } else {

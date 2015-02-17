@@ -21,8 +21,6 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import org.openvpms.report.IMReport;
 
-import java.util.Iterator;
-
 
 /**
  * Generates a jasper report for a collection of objects.
@@ -38,7 +36,7 @@ public interface JasperIMReport<T> extends IMReport<T> {
      * @return the report
      * @throws JRException for any error
      */
-    JasperPrint report(Iterator<T> objects) throws JRException;
+    JasperPrint report(Iterable<T> objects) throws JRException;
 
     /**
      * Returns the master report.
