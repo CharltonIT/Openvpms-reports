@@ -79,9 +79,9 @@ public class PrintService {
     /**
      * Prints a document.
      *
-     * @param document the document to print
+     * @param document   the document to print
      * @param properties the print properties
-     * @param close    if {@code true}, close the document when printing completes
+     * @param close      if {@code true}, close the document when printing completes
      * @throws OpenOfficeException for any error
      */
     public void print(OpenOfficeDocument document, PrintProperties properties, boolean close) {
