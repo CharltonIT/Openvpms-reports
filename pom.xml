@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.openvpms</groupId>
         <artifactId>openvpms</artifactId>
-        <version>1.8-SNAPSHOT</version>
+        <version>1.8-beta-1</version>
         <relativePath>../openvpms/pom.xml</relativePath>
     </parent>
 
@@ -190,7 +190,7 @@
             <version>${jasperreports.version}</version>
             <exclusions>
                 <exclusion>
-                    <!-- use the jdt-compiler jar instead -->
+                    <!-- use the ejc jar instead -->
                     <groupId>eclipse</groupId>
                     <artifactId>jdtcore</artifactId>
                 </exclusion>
@@ -214,11 +214,10 @@
             <version>${jsap.version}</version>
         </dependency>
         <dependency>
-            <!-- use this instead of jdtcore - its significantly smaller -->
-            <groupId>org.eclipse</groupId>
-            <artifactId>jdt-compiler</artifactId>
-            <version>3.1.1</version>
-            <scope>runtime</scope>
+            <!-- required to compile jrxml under Java 8 -->
+            <groupId>org.eclipse.jdt.core.compiler</groupId>
+            <artifactId>ecj</artifactId>
+            <version>4.4</version>
         </dependency>
         <dependency>
             <groupId>org.openoffice</groupId>
